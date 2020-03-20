@@ -1,18 +1,9 @@
 {
 	"name": "解析淘口令的软件",
-	"version": "1.0.0",
+	"version": "1.0.9",
 	"description": "一个会自动解析淘口令的软件",
 	"permissions": [
-		"tabs",
-		"http://*/*",
-		"https://*/*",
-		"background",
-		"notifications",
-		"storage",
-		"unlimitedStorage",
-		"webNavigation",
-		"webRequest",
-		"webRequestBlocking"
+		"webRequest"
 	],
 	"manifest_version":2,
 	"browser_action": {
