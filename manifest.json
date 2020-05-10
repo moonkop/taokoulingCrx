@@ -1,23 +1,30 @@
 {
-	"name": "解析淘口令的软件",
-	"version": "1.1.0",
-	"description": "一个会自动解析淘口令的软件",
-	"permissions": [
-		"http://*/*",
-		"https://*/*",
-		"webRequest"
-	],
-	"manifest_version":2,
-	"browser_action": {
-		"default_title": "解析淘口令的软件",
-		"default_icon": "icon.png",
-		"default_popup": "popup.html"
-	},
+  "name": "解析淘口令的软件",
+  "version": "1.2.0",
+  "description": "一个会自动解析淘口令的软件",
+  "permissions": [
+    "http://*/*",
+    "https://*/*",
+    "webRequest",
+    "clipboardRead",
+    "clipboardWrite"
+  ],
+  "manifest_version": 2,
+  "browser_action": {
+    "default_title": "解析淘口令的软件",
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
+  },
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "icons": {
-		"128": "icon.png",
-		"16": "icon.png",
-		"48": "icon.png"
-	}
+    "128": "icon.png",
+    "16": "icon.png",
+    "48": "icon.png"
+  },
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  }
 }
 
