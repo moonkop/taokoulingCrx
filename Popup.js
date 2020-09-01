@@ -53,29 +53,57 @@ let res = {
     },
     "msg": "success"
 };
-function convertByMyApi(key){
-    return new Promise((resolve)=>{
+let newDataStruct = {
+    "code": 200,
+    "data": {
+        "category_id": 50012082,
+        "coupon_click_url": "https://uland.taobao.com/coupon/edetail?e=RLK54mX71z4E%2BdAb1JoOOtTzo0GEmVVNl9YGe9f7f4TLlj6PKR%2BSOMsVMUZNJP%2FLJN1xUl8YvXFhHw7CV8EJXH%2F4Vru%2FikDrO3C1FHCcJS%2Flw0Uysm7hYBemP0hpIIPvjDppvlX%2Bob8NlNJBuapvQ2MDg9t1zp0RHkLldzKuGCxFO8R2EPFtqUMuxoRQ3C%2BHL2Zv%2FUdYV4yie%2FpBy9wBFg%3D%3D&traceId=0b521ceb15989493230997219e55f0&union_lens=lensId:TAPI@1598949323@0b0af0c3_0d55_17448ce7178_67f6@01&src=open_21ds_cn&from=open_21ds_cn_api&sight=open_21ds_cn",
+        "coupon_end_time": "2020-09-06",
+        "coupon_info": "满159元减70元",
+        "coupon_remain_count": 21300,
+        "coupon_start_time": "2020-09-01",
+        "coupon_total_count": 30000,
+        "item_id": 615405653333,
+        "item_url": "https://s.click.taobao.com/t?e=m%3D2%26s%3DTlsk%2FyzqYx9w4vFB6t2Z2ueEDrYVVa64K7Vc7tFgwiHLWlSKdGSYDu7GtKNr%2BZ8Pt4hWD5k2kjOUGOVNXiQhhWvq05R6NZ%2FMYKtc7agVg6UDDlXfUO2h%2FYz4rjZDGVMAfWpt60treESCbQDM35gOLP1SarTXhIOTrhzfEh3ilxbvVacCb%2FND0tkYvQZuIwx3oGeIQL4Fi9G8aMk4U9E0%2F94VxUvDC2Wnf21Bzx46wt%2FrN430YghHCA%3D%3D&union_lens=lensId:TAPI@1598949323@0b0af0c3_0d55_17448ce7178_67f6@01",
+        "max_commission_rate": "20.00",
+        "has_coupon": true,
+        "youhuiquan": "70",
+        "quanlimit": "159"
+    },
+    "msg": "success"
+}
+function convertByMyApi(key) {
+    return new Promise((resolve) => {
         $.ajax({
-            url: "http://tbk.moonkop.com/tklConvert.php?pass="+key,
+            url: "http://tbk.moonkop.com/tklConvert.php?pass=" + key,
             dataType: 'json',
             success: (res) => {
                 console.log(res);
                 debugger;
-                if (res.code == 200){
-                    let url = '';
-                    if (res.data.coupon_click_url){
-                        url = res.data.coupon_click_url;
-                    } else{
-                        url = res.data.item_url;
+                try {
+                    if (res.code == 200 && res.data) {
+                        let url = '';
+                        if (res.data.coupon_click_url) {
+                            url = res.data.coupon_click_url;
+                        } else {
+                            url = res.data.item_url;
+                        }
+                        let pict_url = '';
+                        let title = '';
+                        if (res.data.item_info) {
+                            pict_url = res.data.item_info.pict_url;
+                            title = res.data.item_info.title
+                        }
+                        resolve({ url, title, pict_url });
+                    } else {
+                        resolve(false);
                     }
-                    let pict_url = res.data.item_info.pict_url;
-                    let title = res.data.item_info.title
-                    resolve({url,title,pict_url});
-                } else{
+                } catch (e) {
                     resolve(false);
                 }
+
             },
-            error:()=>{
+            error: () => {
                 resolve(false);
             }
         })
@@ -83,19 +111,19 @@ function convertByMyApi(key){
     })
 }
 
-function convertByTaokoulingApi(key){
-    return new Promise((resolve)=>{
+function convertByTaokoulingApi(key) {
+    return new Promise((resolve) => {
         $.ajax({
-            url:"https://api.taokouling.com/tkl/tkljm?apikey=VTIjdwvcpb&tkl="+key,
-            dataType:'json',
-            success:(res)=>{
+            url: "https://api.taokouling.com/tkl/tkljm?apikey=VTIjdwvcpb&tkl=" + key,
+            dataType: 'json',
+            success: (res) => {
                 console.log(res);
-                if (res.ret == '调用成功'){
-                    resolve({url:res.url,title:res.content,pict_url: res.picUrl})
-                }else{
+                if (res.ret == '调用成功') {
+                    resolve({ url: res.url, title: res.content, pict_url: res.picUrl })
+                } else {
                     resolve(false);
                 }
-            },error:(err)=>{
+            }, error: (err) => {
                 resolve(false);
             }
         })
@@ -103,22 +131,22 @@ function convertByTaokoulingApi(key){
     })
 }
 
-async function resolveAndOpen(key,callback=(res)=>{}){
+async function resolveAndOpen(key, callback = (res) => { }) {
 
-    $("#resolveOpenBtn").text('解析中...').attr('disable',true);
-    $("#resolveBtn").attr("hidden",true);
+    $("#resolveOpenBtn").text('解析中...').attr('disable', true);
+    $("#resolveBtn").attr("hidden", true);
 
     let res = await resolveKey(key);
     callback(res);
-    window.open(res.url);
+   // window.open(res.url);
 }
 
-async function resolveKey(key){
+async function resolveKey(key) {
     let result = await convertByMyApi(key);
-    if (!result){
+    if (!result) {
         result = await convertByTaokoulingApi(key);
     }
-    if (!result){
+    if (!result) {
         alert("解析失败,请检查淘口令是否有效");
         return
     }
@@ -127,60 +155,69 @@ async function resolveKey(key){
     let open = () => {
         window.open(result.url);
     };
-    $("#openBtn").bind('click',open);
-    $("#img").bind("click",open);
-    $("#openBtn").attr("hidden",'');
+    $("#openBtn").bind('click', open);
+    $("#img").bind("click", open);
+    $("#openBtn").attr("hidden", '');
     return result;
 }
 
-function getKey(){
+function getKey() {
     return $("#inputKey").val();
 }
+function isTkl(str) {
 
+}
 $(document).ready(() => {
 
     bg = chrome.extension.getBackgroundPage();        // get the background page
-    bg.document.body.innerHTML= "";                   // clear the background page
+    bg.document.body.innerHTML = "";                   // clear the background page
 
-// add a DIV, contentEditable=true, to accept the paste action
+    // add a DIV, contentEditable=true, to accept the paste action
     var helperdiv = bg.document.createElement("div");
     bg.document.body.appendChild(helperdiv);
     helperdiv.contentEditable = true;
 
-// focus the helper div's content
-    var range =bg.document.createRange();
+    // focus the helper div's content
+    var range = bg.document.createRange();
     range.selectNode(helperdiv);
     window.getSelection().removeAllRanges();
     window.getSelection().addRange(range);
     helperdiv.focus();
 
-// trigger the paste action
+    // trigger the paste action
     bg.document.execCommand("Paste");
 
-// read the clipboard contents from the helperdiv
+    // read the clipboard contents from the helperdiv
     var clipboardContents = helperdiv.innerText;
-
+    let lastKey=localStorage.getItem("lastKey");
+    console.log({clipboardContents,lastKey})
+    if(clipboardContents==lastKey){
+        localStorage.removeItem('lastKey')
+        return;
+    }
     if (/^[A-Za-z0-9]{11}$/.test(clipboardContents)
-        || /\W[A-Za-z0-9]{11}\W/.test(clipboardContents)){
-        resolveAndOpen(clipboardContents,()=>{
-            window.getSelection().removeAllRanges();
-            bg.document.body.innerHTML= "";                   // clear the background page
-            var helperdiv = bg.document.createElement("div");
-            bg.document.body.appendChild(helperdiv);
-            var range =bg.document.createRange();
-            helperdiv.innerText = '$';
-            range.selectNode(helperdiv);
-            bg.getSelection().removeAllRanges();
-            bg.getSelection().addRange(range);
-            bg.document.execCommand("Copy");
+        || /\W[A-Za-z0-9]{11}\W/.test(clipboardContents)) {
+        resolveAndOpen(clipboardContents, () => {
+        
+            localStorage.setItem("lastKey",clipboardContents)
+            // window.getSelection().removeAllRanges();
+            // bg.document.body.innerHTML = "";                   // clear the background page
+            // var helperdiv = bg.document.createElement("div");
+            // bg.document.body.appendChild(helperdiv);
+            // var range = bg.document.createRange();
+            // helperdiv.innerText = '$';
+            // range.selectNode(helperdiv);
+            // bg.getSelection().removeAllRanges();
+            // bg.getSelection().addRange(range);
+            // bg.document.execCommand("Copy");
         });
         $("#inputKey").val(clipboardContents);
     };
 
-    $("#resolveBtn").bind("click",() => {
+    $("#resolveBtn").bind("click", () => {
         return resolveKey(getKey());
     })
-    $("#resolveOpenBtn").bind('click',async() => {
+    $("#resolveOpenBtn").bind('click', async () => {
         await resolveAndOpen(getKey());
     })
     $("#inputKey").focus();

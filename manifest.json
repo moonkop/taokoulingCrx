@@ -1,9 +1,10 @@
 {
 	"name": "解析淘口令的软件",
-	"version": "1.1.0",
+	"version": "1.2.0",
 	"description": "一个会自动解析淘口令的软件",
 	"permissions": [
       "https://api.taokouling.com/*",
+      "http://tbk.moonkop.com/*",
 		"webRequest",
       "clipboardRead",
       "clipboardWrite"
