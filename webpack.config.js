@@ -31,7 +31,8 @@ module.exports = {
 
     plugins: [
         new HtmlWebpackPlugin({
-            template: './src/popup.html'
+            template: './src/popup.html',
+            filename: "popup.html"
         }),
         new copyPlugin({
             patterns: [

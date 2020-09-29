@@ -72,7 +72,9 @@ class App extends Component<{}, AppState> {
         if (+localStorage.directOpen) {
             window.open(url);
         }
+        this.setState({openUrl: url})
     }
+
     onClickResolve = async () => {
         return this.resolve();
     }
@@ -127,28 +129,26 @@ class App extends Component<{}, AppState> {
                         打开连接
                     </button>
                 </div>
-
-                <div onClick={() => {
-                    localStorage.readFromClipboard = +!+localStorage.readFromClipboard;
-                    this.forceUpdate();
-                }}>
-                    <input type="checkbox"
-                           checked={Boolean(+localStorage.readFromClipboard)}
-                    />
-                    <label htmlFor="readClipboard"> 从剪贴板读取</label>
-
-                </div>
-                <div onClick={() => {
-                    localStorage.directOpen = +!+localStorage.directOpen;
-                    this.forceUpdate();
-                }}>
-                    <input checked={Boolean(+localStorage.directOpen)}
-                           type="checkbox"
-                    />
-                    <label htmlFor="directOpen"> 直接打开
+                <div className="checkbox-group">
+                    <div onClick={() => {
+                        localStorage.readFromClipboard = +!+localStorage.readFromClipboard;
+                        this.forceUpdate();
+                    }}><label htmlFor="readClipboard"> 从剪贴板读取</label>
+                        <input type="checkbox"
+                               checked={Boolean(+localStorage.readFromClipboard)}
+                        />
+                    </div>
+                    <div onClick={() => {
+                        localStorage.directOpen = +!+localStorage.directOpen;
+                        this.forceUpdate();
+                    }}><label htmlFor="directOpen"> 直接打开
                     </label>
-
+                        <input checked={Boolean(+localStorage.directOpen)}
+                               type="checkbox"
+                        />
+                    </div>
                 </div>
+
             </div>
         );
     }
