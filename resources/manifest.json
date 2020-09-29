@@ -1,6 +1,6 @@
 {
   "name": "解析淘口令的软件",
-  "version": "1.3.0",
+  "version": "2.0.0",
   "description": "一个会自动解析淘口令的软件",
   "permissions": [
     "https://api.taokouling.com/*",
