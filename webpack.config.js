@@ -9,14 +9,14 @@ module.exports = {
 
     resolve: {
         modules: ['node_modules'],
-        extensions: ['.jsx', '.js']
+        extensions: ['.jsx', '.js', '.ts', '.tsx']
     },
 
     module: {
         rules: [
             {
                 exclude: /node_modules/,
-                test: /\.tsx?$/,
+                test: /\.(ts|tsx)?$/,
                 use: "ts-loader",
             },
             {

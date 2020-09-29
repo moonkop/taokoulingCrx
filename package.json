@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server --mode development",
     "clean": "rm -rf dist",
-    "build": "yarn clean & webpack --mode production"
+    "build": "npm run  clean & webpack --mode production"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
