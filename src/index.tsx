@@ -10,8 +10,12 @@ interface AppState {
     directOpen: boolean,
     readFromClipboard: boolean;
     openUrl: string;
+    loading: boolean;
+    message: string;
+    messageType: MessageType;
 }
 
+type MessageType = 'success' | 'error' | '';
 
 class App extends Component<{}, AppState> {
     constructor (props) {
@@ -23,6 +27,9 @@ class App extends Component<{}, AppState> {
             openUrl: '',
             directOpen: true,
             readFromClipboard: true,
+            loading: false,
+            message: '',
+            messageType: ''
         }
     }
 
@@ -33,14 +40,19 @@ class App extends Component<{}, AppState> {
     }
 
     resolve = async () => {
-
+        if (this.state.loading) {
+            return;
+        }
         this.setState({
             imgSrc: '',
             title: '',
         });
         const {input} = this.state;
+        this.setState({loading: true})
+
         if (!isValidKey(input)) {
-            alert('这不是淘口令吧?')
+            this.showMessage('这不是淘口令吧?', "error");
+            this.setState({loading: false})
             return false;
         }
         let {res, err} = await convertByMyApi(input);
@@ -57,7 +69,8 @@ class App extends Component<{}, AppState> {
     fallback = async () => {
         let {res, err} = await convertByTaokoulingApi(this.state.input);
         if (err) {
-            alert('解析失败');
+            this.showMessage('解析失败', "error");
+            this.setState({loading: false})
             return false;
         }
         this.setState({
@@ -68,11 +81,15 @@ class App extends Component<{}, AppState> {
         return true;
 
     }
+    showMessage = (message: string, messageType: MessageType) => {
+        this.setState({message, messageType})
+    }
     afterResolve = (url) => {
         if (+localStorage.directOpen) {
             window.open(url);
         }
-        this.setState({openUrl: url})
+        this.showMessage('解析成功', "success");
+        this.setState({openUrl: url, loading: false})
     }
 
     onClickResolve = async () => {
@@ -82,8 +99,9 @@ class App extends Component<{}, AppState> {
         return this.PasteAndResolve(false);
     }
     PasteAndResolve = async (autoOpen: boolean) => {
-        console.log('读取剪贴板', {autoOpen})
         let key = tryReadValidKeyFromClipboard();
+        console.log('读取剪贴板', {autoOpen, key})
+
         if (!key) {
             return false;
         }
@@ -114,7 +132,7 @@ class App extends Component<{}, AppState> {
                     console.log(e)
                     this.setState({input: e.currentTarget.value})
                 }}/>
-                <div className="btn-area">
+                <div className={"btn-area " + (this.state.loading ? 'disabled ' : '')}>
                     <button id='resolveBtn' onClick={this.onClickPasteAndResolve}>
                         粘贴并解析
                     </button>
@@ -122,6 +140,9 @@ class App extends Component<{}, AppState> {
                         解析
                     </button>
                 </div>
+                {this.state.message && <div className={"message " + this.state.messageType}>
+                    {this.state.message}
+                </div>}
                 <div style={{display: (this.state.imgSrc || this.state.title) ? 'block' : 'none'}}>
                     <img height="180" width="180" src={this.state.imgSrc} alt="" id="img"/>
                     <div id="title">{this.state.title}</div>

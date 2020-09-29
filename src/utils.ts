@@ -9,7 +9,7 @@ export function getLastOpenFormClipboard () {
 export function tryReadValidKeyFromClipboard (): undefined | string {
     try {
         if (!chrome.extension) {
-            return '￥UH2lc5umIU8￥'
+            return ''
         }
         let bg = chrome.extension.getBackgroundPage();        // get the background page
         bg.document.body.innerHTML = "";                   // clear the background page

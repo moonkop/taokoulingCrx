@@ -4,6 +4,10 @@
 	<meta charset="utf-8">
 	<title>Preact</title>
 	<style>
+		*:focus {
+			outline: none;
+		}
+
 		body {
 			overflow: hidden;
 			margin: 0px;
@@ -65,9 +69,35 @@
 			justify-content: space-between;
 		}
 
+		.btn-area.disabled button {
+			background-color: #ececec;
+			color: #c1c1c1;
+			border: 1px solid #c3c3c3;
+			cursor: not-allowed;
+			border-radius: 4px;
+		}
+
 		.checkbox-group {
 			margin-top: 5px;
 			text-align: right;
+		}
+
+		.message {
+			padding: 10px;
+			border: 4px;
+			margin-top: 8px;
+		}
+
+		.message.error {
+			border: 1px solid #ffccc7;
+			background-color: #fff2f0;
+			color: #ff4141;
+		}
+
+		.message.success {
+			background-color: #f6ffed;
+			border: 1px solid #b7eb8f;
+			color: #1b7d30;
 		}
 	</style>
 

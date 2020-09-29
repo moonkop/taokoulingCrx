@@ -19,7 +19,10 @@ export async function convertByTaokoulingApi (key) {
     if (err) {
         return {err}
     }
-    return {res}
+    if (res.url == '') {
+        return {err: res.msg}
+    }
+    return {res};
 
 }
 
