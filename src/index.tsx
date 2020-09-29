@@ -16,6 +16,12 @@ interface AppState {
 }
 
 type MessageType = 'success' | 'error' | '';
+if (!localStorage.readFromClipboard) {
+    localStorage.readFromClipboard = 1;
+}
+if (!localStorage.directOpen) {
+    localStorage.directOpen = 1;
+}
 
 class App extends Component<{}, AppState> {
     constructor (props) {
@@ -64,7 +70,7 @@ class App extends Component<{}, AppState> {
         })
         this.afterResolve(res.coupon_click_url);
         return true;
-    }
+    };
 
     fallback = async () => {
         let {res, err} = await convertByTaokoulingApi(this.state.input);
@@ -80,24 +86,24 @@ class App extends Component<{}, AppState> {
         this.afterResolve(res.url);
         return true;
 
-    }
+    };
     showMessage = (message: string, messageType: MessageType) => {
         this.setState({message, messageType})
-    }
+    };
     afterResolve = (url) => {
         if (+localStorage.directOpen) {
             window.open(url);
         }
         this.showMessage('解析成功', "success");
         this.setState({openUrl: url, loading: false})
-    }
+    };
 
     onClickResolve = async () => {
         return this.resolve();
-    }
+    };
     onClickPasteAndResolve = () => {
         return this.PasteAndResolve(false);
-    }
+    };
     PasteAndResolve = async (autoOpen: boolean) => {
         let key = tryReadValidKeyFromClipboard();
         console.log('读取剪贴板', {autoOpen, key})
@@ -120,10 +126,10 @@ class App extends Component<{}, AppState> {
             setLastOpenFormClipboard(key);
         }
 
-    }
+    };
     openLink = () => {
         window.open(this.state.openUrl);
-    }
+    };
 
     render () {
         return (
