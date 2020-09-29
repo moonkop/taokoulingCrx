@@ -1,4 +1,11 @@
-# 一个自动解析淘口令的软件
+# preact-webpack4
+This repository is a example how to use preact 
 
-以开发者模式打开chrome插件管理面板 然后加载已解压的扩展程序 选中这个文件夹 就可以了 
-点击这个滑稽图标会出现一个input 和按钮 你懂的
+### Install dependencies
+`yarn install`
+
+### Start
+`yarn start`
+
+### Open
+http://localhost:8080
